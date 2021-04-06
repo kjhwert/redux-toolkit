@@ -1,26 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Notice from "./features/notice/Notice";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import Login from "./features/profile/Login";
+import Profile from "./features/profile/Profile";
+import NotFound from "./modules/components/NotFound";
 
-function App() {
+export const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Link to="login">로그인</Link>
+      <Link to="profile">프로필</Link>
+      <Link to="notice">공지사항</Link>
+      <Switch>
+        <Route path="/login" component={Login} />
+        <Route path="/profile" component={Profile} />
+        <Route path="/notice" component={Notice} />
+        <Route component={NotFound} />
+      </Switch>
+    </Router>
   );
-}
+};
 
 export default App;
