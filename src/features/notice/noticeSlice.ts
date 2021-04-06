@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { counterSlice } from "../counter/counterSlice";
 import { RootState } from "../../app/store";
 import { api } from "../../modules/api";
 
@@ -43,7 +42,7 @@ export const noticeSlice = createSlice({
   },
 });
 
-export const {} = counterSlice.actions;
+// export const {} = noticeSlice.actions;
 
 export const noticeStatus = (state: RootState) => state.notice;
 export const noticeIndex = (state: RootState) => state.notice.data;
