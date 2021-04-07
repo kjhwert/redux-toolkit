@@ -5,10 +5,10 @@ export const api = axios.create({
   baseURL: BASE_URL,
 });
 
-api.interceptors.request.use((config) => {
-  return config;
-});
-
-api.interceptors.response.use((config) => {
-  return config;
-});
+// api.interceptors.request.use((config) => {
+//   return config;
+// });
+//
+// api.interceptors.response.use((config) => {
+//   return config;
+// });

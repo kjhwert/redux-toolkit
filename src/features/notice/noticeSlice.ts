@@ -12,7 +12,7 @@ export interface Notice {
 export interface NoticeState {
   data: Array<Notice>;
   status: "idle" | "loading" | "failed";
-  message: "";
+  message: string | undefined;
 }
 
 const initialState: NoticeState = {
@@ -26,6 +26,31 @@ export const index = createAsyncThunk("notice/index", async () => {
   return data;
 });
 
+export const create = createAsyncThunk(
+  "notice/create",
+  async (state: { title: string; description: string }) => {
+    try {
+      const { data } = await api.post("notice", state);
+      return data;
+    } catch (e) {
+      return e.response.data;
+    }
+  }
+);
+
+export const destroy = createAsyncThunk(
+  "notice/destroy",
+  async (id: number) => {
+    try {
+      const { data } = await api.delete(`notice/${id}`);
+      data.data.id = id;
+      return data;
+    } catch (e) {
+      return e.response.data;
+    }
+  }
+);
+
 export const noticeSlice = createSlice({
   name: "notice",
   initialState,
@@ -38,6 +63,28 @@ export const noticeSlice = createSlice({
       .addCase(index.fulfilled, (state, { payload }) => {
         state.status = "idle";
         state.data = payload.data;
+      })
+      .addCase(create.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(create.fulfilled, (state, { payload }) => {
+        //TODO 데이터가 등록되면, 등록된 정보를 뱉어줘야겠네(back-end에서)
+        state.status = "idle";
+        if (payload.statusCode === 200) {
+          const { id, title, description, createdAt } = payload.data;
+          state.data.unshift({ id, title, description, createdAt });
+        }
+      })
+      .addCase(destroy.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(destroy.fulfilled, (state, { payload }) => {
+        state.status = "idle";
+        if (payload.statusCode === 200) {
+          state.data = state.data.filter(
+            (notice) => notice.id !== payload.data.id
+          );
+        }
       });
   },
 });

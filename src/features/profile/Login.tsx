@@ -3,6 +3,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { useToasts } from "react-toast-notifications";
 import { profileLogin } from "./profileSlice";
 import { RouteComponentProps } from "react-router";
+import { api } from "../../modules/api";
 
 const Login = ({ history }: RouteComponentProps) => {
   const { addToast } = useToasts();
@@ -14,7 +15,7 @@ const Login = ({ history }: RouteComponentProps) => {
 
   const login = async () => {
     const {
-      payload: { statusCode, message },
+      payload: { statusCode, message, data },
     } = await dispatch(profileLogin(state));
     if (statusCode !== 200) {
       return addToast(message, {
@@ -22,6 +23,7 @@ const Login = ({ history }: RouteComponentProps) => {
         autoDismiss: true,
       });
     }
+    api.defaults.headers.common["Authorization"] = `Bearer ${data.accessToken}`;
     addToast("로그인 되었습니다.", {
       appearance: "success",
       autoDismiss: true,
